@@ -4,7 +4,36 @@ const priority = document.querySelector('select');
 const deadline = document.querySelector('input[type="date"]');
 const submit = document.getElementById('submit');
 let list = [];
-submit.addEventListener('click', () => {
+const addItem = (item) => 
+{
+const tr = document.createElement('tr');
+for (const prop in item) {
+const td = document.createElement('td');
+
+    //const td = document.createElement('td');
+
+
+if (prop == 'done')
+    {
+const checkbox = document.createElement('input');
+checkbox.type = 'checkbox';
+checkbox.checked = item[prop];
+td.appendChild(checkbox);
+
+checkbox.addEventListener('change', () => {
+   item.done = checkbox.checked;
+});
+}
+else
+{
+    td.textContent = item[prop];
+}
+tr.appendChild(td);
+}
+table.append(tr);
+};
+submit.addEventListener('click', () => 
+    {
     console.log('jaja');
     const item = {};
 
@@ -12,39 +41,37 @@ submit.addEventListener('click', () => {
     item.priority = priority.value;
     item.deadline = deadline.value;
     item.done = false;
-    if (deadline.value != ''){
+    
+    if (deadline.value != '')
+        {
             item.deadline = deadline.value;
-        }else{
-            window.alert('期日を入力してください');
+        }
+        else
+        {
+          //  window.alert('期日を入力してください');
         const date = new Date();
         item.deadline = date.toLocaleDateString();}
-        if (todo.value != ''){
+        if (todo.value != '')
+        {
             item.todo = todo.value;
-        }else{
+        }
+        else
+        {
             item.todo = 'ダミーTODO';
         }
         
-    console.log(item);
-   todo.value ='';
-   priority.value = '普';
-   deadline.value = '';
-   const tr = document.createElement('tr');
-
-        for (const prop in item){
-            const td = document.createElement('td');
-            if (prop == 'done'){
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = item[prop];
-                td.appendChild(checkbox);
-            }else{
-                td.textContent = item[prop];
-            }
-            tr.appendChild(td);
-        }
-        
-        table.append(tr);
+            console.log(item);
+            todo.value ='';
+            priority.value = '普';
+            deadline.value = ''; 
+            
+            const tr = document.createElement('tr');
+             addItem(item);
+            
+             list.push(item);
         });
+
+        
 
         const filterButton = document.createElement('button');
         filterButton.textContent = '優先度（高）で絞り込み';
@@ -53,11 +80,7 @@ submit.addEventListener('click', () => {
         main.appendChild(filterButton);
 
         filterButton.addEventListener('click', () => {
-            const trList = Array.from(document.getElementsByTagName('tr'));
-            trList.shift();
-            for (const tr of trList) {
-                tr.remove();
-            }
+        clearTable()
        // table.textContent = '';
 
             for (const item of list) {
@@ -65,4 +88,27 @@ submit.addEventListener('click', () => {
                     addItem(item);
                 }
             }
+        });
+        const clearTable = () => {
+            const trList = Array.from(document.getElementsByTagName('tr'));
+            trList.shift();
+            for (const tr of trList) {
+                tr.remove();
+            }
+        };
+         const remove = document.createElement('button');
+         remove.textContent = '完了したTODOを削除する';
+        remove.id = 'remove';
+        const br = document.createElement('br');
+        main.appendChild(br);
+        main.appendChild(remove);
+        
+         
+        remove.addEventListener('click',() => {
+            clearTable();
+            list = list.filter((item) => item.done == false);
+            for (const item of list) {
+                addItem(item);
+            }
+           // Storage.todolist = JSON.stringify(list);
         });
