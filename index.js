@@ -1,17 +1,35 @@
+'use strict'
+const storage = localStorage;
 const table = document.querySelector('table');
 const todo = document.getElementById('todo');
 const priority = document.querySelector('select');
 const deadline = document.querySelector('input[type="date"]');
 const submit = document.getElementById('submit');
+
 let list = [];
+
+document.addEventListener('DOMContentLoaded', () =>{
+    const json =storage.todoList;//ストレージの読み込み
+    if (json == undefined) 
+        {
+        return;//何もしない
+    }
+    list = JSON.parse(json);
+    for (const item of list)
+        {
+        addItem(item);
+    }
+    
+});
 const addItem = (item) => 
 {
 const tr = document.createElement('tr');
-for (const prop in item) {
+
+for (const prop in item) 
+    {
 const td = document.createElement('td');
 
     //const td = document.createElement('td');
-
 
 if (prop == 'done')
     {
@@ -20,11 +38,8 @@ checkbox.type = 'checkbox';
 checkbox.checked = item[prop];
 td.appendChild(checkbox);
 
-checkbox.addEventListener('change', () => {
-   item.done = checkbox.checked;
-});
-}
-else
+checkbox.addEventListener('change', checkBoxListener);
+    }else
 {
     td.textContent = item[prop];
 }
@@ -32,6 +47,19 @@ tr.appendChild(td);
 }
 table.append(tr);
 };
+const checkBoxListener = (ev) =>{
+    const trList = Array.from(document.getElementsByTagName('tr'));
+    const currentTr = ev.currentTarget.parentElement.parentElement;
+    const idx = trList.indexOf(currentTr) - 1;
+    list[idx].done = ev.currentTarget.checked;
+    storage.todoList = JSON.stringify(list);
+};
+
+
+
+
+
+
 submit.addEventListener('click', () => 
     {
     console.log('jaja');
@@ -48,7 +76,6 @@ submit.addEventListener('click', () =>
         }
         else
         {
-          //  window.alert('期日を入力してください');
         const date = new Date();
         item.deadline = date.toLocaleDateString();}
         if (todo.value != '')
@@ -69,6 +96,7 @@ submit.addEventListener('click', () =>
              addItem(item);
             
              list.push(item);
+             storage.todoList = JSON.stringify(list);
         });
 
         
@@ -81,7 +109,6 @@ submit.addEventListener('click', () =>
 
         filterButton.addEventListener('click', () => {
         clearTable()
-       // table.textContent = '';
 
             for (const item of list) {
                 if (item.priority == '高'){
@@ -96,8 +123,8 @@ submit.addEventListener('click', () =>
                 tr.remove();
             }
         };
-         const remove = document.createElement('button');
-         remove.textContent = '完了したTODOを削除する';
+        const remove = document.createElement('button');
+        remove.textContent = '完了したTODOを削除する';
         remove.id = 'remove';
         const br = document.createElement('br');
         main.appendChild(br);
@@ -110,5 +137,5 @@ submit.addEventListener('click', () =>
             for (const item of list) {
                 addItem(item);
             }
-           // Storage.todolist = JSON.stringify(list);
+            storage.todoList = JSON.stringify(list);
         });
