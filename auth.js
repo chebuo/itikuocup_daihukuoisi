@@ -1,6 +1,6 @@
-import {initializeApp} from "firebase/app";
-import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword} from "firebase/auth";
-import {getFirestore,collection,getDocs} from 'firebase/firestore/lite';
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {getFirestore,collection,getDocs} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-lite.js";
 //firebaseのIDなどを宣言
 const firebaseConfig = {
   apiKey: "AIzaSyAo6Teruh-6dPXACBAeJbH_lCmXzfTKt8M",
