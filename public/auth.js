@@ -23,6 +23,8 @@ loginform.addEventListener("submit",(e)=>{
     e.preventDefault();
     const email=emailText.value;
     const password=passwordText.value;
+    console.log(email);
+    console.log(password);
     createUserWithEmailAndPassword(auth,email,password)
     .then((userCredential)=>{
         const user=userCredential.user;
@@ -31,8 +33,32 @@ loginform.addEventListener("submit",(e)=>{
     }).catch((error)=>{
         const errorCode=error.code;
         const errorMessage=error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
     })
 });
+/////////ここからsignin
+const signinform=document.getElementById("signinForm");
+
+signinform.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    const email=emailText.value;
+    const password=passwordText.value;
+    console.log(email);
+    console.log(password);
+    signInWithEmailAndPassword(auth,email,password)
+    .then((userCredential)=>{
+        const user =userCredential.user;
+        console.log("signin");
+        console.log(user);
+    }).catch((error)=>{
+        const errorCode=error.code;
+        const errorMessage=error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
+    })
+});
+
 const db=getFirestore(app);
 //collection/document/data 
 async function getCities(db){
