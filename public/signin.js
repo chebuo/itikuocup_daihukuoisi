@@ -1,5 +1,5 @@
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,deleteUser} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 //firebaseのIDなどを宣言
 const firebaseConfig = {
   apiKey: "AIzaSyAo6Teruh-6dPXACBAeJbH_lCmXzfTKt8M",
@@ -29,10 +29,39 @@ signinform.addEventListener("submit",(e)=>{
         const user =userCredential.user;
         console.log("signin");
         console.log(user);
+        if(auth.currentUser.emailVerified){
+            window.location.href="index.html";
+        }else{
+            alert("メールアドレスの認証が完了していません。もう一度登録しなおしてください。");
+            deleteUser(user);
+            window.location.href="auth.html";
+        }
     }).catch((error)=>{
         const errorCode=error.code;
         const errorMessage=error.message;
         console.log(errorCode);
         console.log(errorMessage);
+        if(email===''){
+            alert("メールアドレスを入力してください");
+            return;
+        }
+        if(password===''){
+            alert("パスワードを入力してください");
+            return;
+        }
+        if(errorCode==='auth/invalid-credential'){
+            alert("メールアドレス、またはパスワードが正しくありません");
+            return;
+        }
     })
+});
+
+onAuthStateChanged(auth,(user)=>{
+    if(user){
+        const uid=user.uid;
+        console.log("uid:"+uid);
+        console.log("sign in");
+    }else{
+        console.log("sign out");
+    }
 });
