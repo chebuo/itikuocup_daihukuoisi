@@ -1,10 +1,10 @@
 
-// --- –Í•íƒAƒvƒŠ—pƒƒWƒbƒN ---
+// --- æ¨¡å€£ã‚¢ãƒ—ãƒªç”¨ãƒ­ã‚¸ãƒƒã‚¯ ---
 let actions = [];
 let results = [];
-let firstPlayer = 'ˆêl–Ú';
-let secondPlayer = '“ñl–Ú';
-let turn = 0; // 0: ˆêl–Ú“ü—Í, 1: “ñl–Ú“ü—Í
+let firstPlayer = 'ä¸€äººç›®';
+let secondPlayer = 'äºŒäººç›®';
+let turn = 0; // 0: ä¸€äººç›®å…¥åŠ›, 1: äºŒäººç›®å…¥åŠ›
 
 const actionForm = document.getElementById('action-form');
 const actionInput = document.getElementById('action-input');
@@ -44,7 +44,7 @@ actionForm.addEventListener('submit', e => {
 if (nextPhaseBtn) {
 nextPhaseBtn.addEventListener('click', () => {
     if (actions.length === 0) {
-        alert('s“®‚ğ1‚ÂˆÈã“ü—Í‚µ‚Ä‚­‚¾‚³‚¢');
+        alert('è¡Œå‹•ã‚’1ã¤ä»¥ä¸Šå…¥åŠ›ã—ã¦ãã ã•ã„');
         return;
     }
     inputPhase.style.display = 'none';
@@ -58,8 +58,8 @@ function renderMimicList() {
     results = Array(actions.length).fill(null);
     actions.forEach((act, idx) => {
         const li = document.createElement('li');
-        li.textContent = act + 'F';
-        ['Z','¢','?'].forEach(mark => {
+        li.textContent = act + 'ï¼š';
+        ['ã€‡','â–³','?'].forEach(mark => {
             const btn = document.createElement('button');
             btn.textContent = mark;
             btn.onclick = () => {
@@ -84,27 +84,27 @@ function updateMimicList() {
 if (scoreBtn) {
 scoreBtn.addEventListener('click', () => {
     if (results.some(r => r === null)) {
-        alert('‚·‚×‚Ä‚Ìs“®‚ÉŒ‹‰Ê‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢');
+        alert('ã™ã¹ã¦ã®è¡Œå‹•ã«çµæœã‚’é¸æŠã—ã¦ãã ã•ã„');
         return;
     }
     mimicPhase.style.display = 'none';
     scorePhase.style.display = '';
     let score = 0;
     results.forEach(r => {
-        if (r === 'Z') score += 2;
-        else if (r === '¢') score += 1;
+        if (r === 'ã€‡') score += 2;
+        else if (r === 'â–³') score += 1;
     });
-    scoreResult.textContent = `${secondPlayer}‚Ì“¾“_: ${score}“_`;
+    scoreResult.textContent = `${secondPlayer}ã®å¾—ç‚¹: ${score}ç‚¹`;
 });
 }
 
 if (swapBtn) {
 swapBtn.addEventListener('click', () => {
-    // æUŒãU“ü‘Ö
+    // å…ˆæ”»å¾Œæ”»å…¥æ›¿
     turn = 1 - turn;
     [firstPlayer, secondPlayer] = [secondPlayer, firstPlayer];
-    inputTitle.textContent = `${firstPlayer}Fs“®“ü—Í`;
-    mimicTitle.textContent = `${secondPlayer}F–Í•íEŒ‹‰Ê‹L˜^`;
+    inputTitle.textContent = `${firstPlayer}ï¼šè¡Œå‹•å…¥åŠ›`;
+    mimicTitle.textContent = `${secondPlayer}ï¼šæ¨¡å€£ãƒ»çµæœè¨˜éŒ²`;
     actions = [];
     results = [];
     renderActions();
@@ -118,10 +118,10 @@ resetBtn.addEventListener('click', () => {
     actions = [];
     results = [];
     turn = 0;
-    firstPlayer = 'ˆêl–Ú';
-    secondPlayer = '“ñl–Ú';
-    inputTitle.textContent = `${firstPlayer}Fs“®“ü—Í`;
-    mimicTitle.textContent = `${secondPlayer}F–Í•íEŒ‹‰Ê‹L˜^`;
+    firstPlayer = 'ä¸€äººç›®';
+    secondPlayer = 'äºŒäººç›®';
+    inputTitle.textContent = `${firstPlayer}ï¼šè¡Œå‹•å…¥åŠ›`;
+    mimicTitle.textContent = `${secondPlayer}ï¼šæ¨¡å€£ãƒ»çµæœè¨˜éŒ²`;
     renderActions();
     scorePhase.style.display = 'none';
     inputPhase.style.display = '';
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     const json =storage.todoList;//ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã®èª­ã¿è¾¼ã¿
     if (json == undefined) 
         {
-        return;//ä½•ã‚‚ã—ãªã?
+        return;//ä½•ã‚‚ã—ãªï¿½?
     }
     list = JSON.parse(json);
     for (const item of list)
@@ -213,7 +213,7 @@ submit.addEventListener('click', () =>
         }
         else
         {
-            item.todo = 'ãƒ€ãƒŸã?¼TODO';
+            item.todo = 'ãƒ€ãƒŸï¿½?ï¿½TODO';
         }
         
             console.log(item);
@@ -231,7 +231,7 @@ submit.addEventListener('click', () =>
         
 
         const filterButton = document.createElement('button');
-        filterButton.textContent = 'å„ªå…ˆåº¦?¼ˆé«˜ï¼‰ã§çµã‚Šè¾¼ã¿';
+        filterButton.textContent = 'å„ªå…ˆåº¦?ï¿½ï¿½é«˜ï¼‰ã§çµã‚Šè¾¼ã¿';
         filterButton.id = 'priority';
         const main = document.querySelector('main');
         main.appendChild(filterButton);
@@ -240,7 +240,7 @@ submit.addEventListener('click', () =>
         clearTable()
 
             for (const item of list) {
-                if (item.priority == 'é«?'){
+                if (item.priority == 'ï¿½?'){
                     addItem(item);
                 }
             }
@@ -253,7 +253,7 @@ submit.addEventListener('click', () =>
             }
         };
         const remove = document.createElement('button');
-        remove.textContent = 'å®Œäº?ã—ãŸTODOã‚’å‰Šé™¤ã™ã‚‹';
+        remove.textContent = 'å®Œï¿½?ã—ãŸTODOã‚’å‰Šé™¤ã™ã‚‹';
         remove.id = 'remove';
         const br = document.createElement('br');
         main.appendChild(br);
