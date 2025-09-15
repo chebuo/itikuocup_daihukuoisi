@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     const json =storage.todoList;//ストレージの読み込み
     if (json == undefined) 
         {
-        return;//何もしな�?
+        return;//何もしない
     }
     list = JSON.parse(json);
     for (const item of list)
@@ -213,7 +213,7 @@ submit.addEventListener('click', () =>
         }
         else
         {
-            item.todo = 'ダミ�?�TODO';
+            item.todo = 'ダミーTODO';
         }
         
             console.log(item);
@@ -231,7 +231,7 @@ submit.addEventListener('click', () =>
         
 
         const filterButton = document.createElement('button');
-        filterButton.textContent = '優先度?��高）で絞り込み';
+        filterButton.textContent = '優先度（高）で絞り込み';
         filterButton.id = 'priority';
         const main = document.querySelector('main');
         main.appendChild(filterButton);
@@ -240,7 +240,7 @@ submit.addEventListener('click', () =>
         clearTable()
 
             for (const item of list) {
-                if (item.priority == '�?'){
+                if (item.priority == '高'){
                     addItem(item);
                 }
             }
@@ -253,7 +253,7 @@ submit.addEventListener('click', () =>
             }
         };
         const remove = document.createElement('button');
-        remove.textContent = '完�?したTODOを削除する';
+        remove.textContent = '完了したTODOを削除する';
         remove.id = 'remove';
         const br = document.createElement('br');
         main.appendChild(br);
