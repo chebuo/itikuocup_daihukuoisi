@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getFirestore,getDoc, collection, addDoc,setDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { getFirestore,getDoc, collection, addDoc,setDoc,getDocs, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 import { getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -54,14 +54,23 @@ document.getElementById('room-form').addEventListener('submit',async(e)=>{
     if(!roomKey) return;
     roomId=roomKey;
     console.log(roomId);
-    messageRef=collection(db,"rooms",roomId,auth.currentUser.uid);
-    await addDoc(messageRef,{
+    const playerRef=doc(db,"rooms",roomId,"players",auth.currentUser.uid);
+    await setDoc(playerRef,{
         user:auth.currentUser.uid || "empty",
         action:actions,
         timestamp:new Date()
     });
-    console.log(messageRef);
+    console.log(playerRef.path);
+
+    const targetUid=collection(db,"rooms",roomId,"players");
+    const playersSnap=await getDocs(targetUid);
+    playersSnap.forEach((doc)=>{
+        if(doc.id==auth.currentUser.uid) return;
+        console.log(doc.id);
+        console.log(doc.data().action);
+    })
 });
+
 // 行動送信（ダミー：相手待ち）
 document.getElementById('submit-actions').onclick = async() => {
     document.getElementById('wait-msg').style.display = '';
