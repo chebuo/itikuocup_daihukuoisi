@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>scary3</title>
+    <link rel="stylesheet" href="scary.css" />
+  </head>
+  <body>
+    <p>3</p>
+    <!-- 鬼の画像 -->
+    <img src="oni.png" alt="鬼" class="oni" id="oni" />
+
+    <!-- 効果音（例: oni.mp3） -->
+    <audio id="oniSound" src="oni.mp3" preload="auto"></audio>
+
+    <script>
+      // 3秒後に画像と音声を同時に再生
+      setTimeout(() => {
+        document.getElementById("oni").style.display = "block";
+        document.getElementById("oniSound").play();
+      }, 500);
+    </script>
+  </body>
+</html>

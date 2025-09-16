@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: black;
+}
+
+.oni {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover; /* 画面いっぱいに収める */
+  z-index: 9999; /* 常に最前面に表示 */
+}
