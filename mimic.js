@@ -94,6 +94,35 @@ if (scoreBtn) {
             else if (r === '△') score += 1;
         });
         scoreResult.textContent = `${secondPlayer}の得点: ${score}点`;
+
+        // 一人目の得点をlocalStorageに一時保存（すでに保存済みなら上書きしない）
+        if (turn === 0 && !localStorage.getItem('score_first')) {
+            localStorage.setItem('score_first', JSON.stringify({ player: firstPlayer, value: score }));
+        }
+
+        // 攻守交替済みかつ二人目の点数化が終わったらリザルト遷移ボタン表示
+        if (turn === 1) {
+            // 二人目のplayer名は常に「二人目」に固定
+            localStorage.setItem('score_second', JSON.stringify({ player: '二人目', value: score }));
+            let resultBtn = document.getElementById('result-btn');
+            if (!resultBtn) {
+                resultBtn = document.createElement('button');
+                resultBtn.id = 'result-btn';
+                resultBtn.textContent = 'リザルト画面へ';
+                resultBtn.style.marginTop = '20px';
+                scorePhase.appendChild(resultBtn);
+            }
+            resultBtn.onclick = () => {
+                // 両方の得点をlocalStorageにまとめて保存
+                const score_first = JSON.parse(localStorage.getItem('score_first') || '{}');
+                const score_second = JSON.parse(localStorage.getItem('score_second') || '{}');
+                localStorage.setItem('score', JSON.stringify({
+                    first: score_first.player + 'の得点: ' + score_first.value + '点',
+                    second: score_second.player + 'の得点: ' + score_second.value + '点'
+                }));
+                window.location.href = 'result.html';
+            };
+        }
     });
 }
 
