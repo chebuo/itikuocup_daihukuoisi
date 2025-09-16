@@ -160,6 +160,18 @@ button[onclick*="mimic.html"]:hover {
   box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
 }
 
+/* プロフィールボタン（アクセント） */
+#profilebtn {
+  background: #919605;
+  color: #ffffff;
+}
+
+#profilebtn:hover {
+  background: #919605;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
 /* テーブル */
 table {
   width: 100%;
