@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html lang="ja">
-<body>
-     <meta charset="uft-8">
-<div id="input">
-    <label>TODO: <input id="todo"></label><br>
-    優先度:
-    <select>
+  <body>
+    <meta charset="uft-8" />
+    <div id="input">
+      <label>TODO: <input id="todo" /></label><br />
+      優先度:
+      <select>
         <option>低</option>
         <option selected>普</option>
         <option>高</option>
-    </select>
-    <label>期日: <input type="date"></label><br>
-    <button id="submit">登録</button>
-    <table>
+      </select>
+      <label>期日: <input type="date" /></label><br />
+      <button id="submit">登録</button>
+      <table>
         <tr>
-            <th>TODO</th>
-            <th>優先度</th>
-            <th>期日</th>
+          <th>TODO</th>
+          <th>優先度</th>
+          <th>期日</th>
         </tr>
-    </table>
-</div>
-<main></main>
-<hr>
-<button onclick="window.open('mimic.html', '_blank')">模倣アプリを開く</button>
-<script src="index.js"></script>
-</body>
+      </table>
+    </div>
+    <main></main>
+    <hr />
+    <button onclick="window.open('mimic.html', '_blank')">
+      模倣アプリを開く
+    </button>
+    <button type="button" id="batubtn">始める</button>
+    <script src="index.js"></script>
+  </body>
 </html>
