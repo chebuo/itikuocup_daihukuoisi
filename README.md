@@ -1,6 +1,6 @@
 # itikuocup_daihukuoisi
 
-ƒfƒvƒƒCæ
+ãƒ‡ãƒ—ãƒ­ã‚¤å…ˆ
 git
 https://chebuo.github.io/itikuocup_daihukuoisi/
 
