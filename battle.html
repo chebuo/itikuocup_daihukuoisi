@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>やったこと対戦</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 40px; }
-        .section { margin: 30px auto; padding: 20px; border: 1px solid #ccc; width: 350px; border-radius: 8px; }
-        h2 { margin-bottom: 10px; }
-        ul { list-style: none; padding: 0; }
-        li { margin: 8px 0; }
-        button { margin: 10px; }
-    </style>
+    <link rel="stylesheet" href="battle.css">
 </head>
 <body>
     <h1>やったこと対戦</h1>
+    <div class="section" id="room-section">
+        <h2>あいことばでルーム作成</h2>
+        <form id="room-form">
+            <input type="text" id="room-key-input" placeholder="あいことばを入力" required>
+            <button type="submit">ルーム作成</button>
+        </form>
+    </div>
 
     <!-- やったこと入力 -->
     <div class="section" id="input-phase">
         <h2>今日やったことを入力</h2>
+        <p class="center-note">※やったことは3つ～5つで書いてください</p>
         <form id="action-form">
             <input type="text" id="action-input" placeholder="やったこと" required>
             <button type="submit">追加</button>
         </form>
         <ul id="action-list"></ul>
-        <button id="submit-actions">リストを送信</button>
+    <button id="submit-actions" class="center-btn">リストを送信</button>
         <p id="wait-msg" style="display:none;">相手の入力を待っています...</p>
     </div>
 
