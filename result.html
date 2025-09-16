@@ -21,15 +21,15 @@
     </div>
 
     <script>
-      // localStorageから両方の得点を取得して表示
+      // localStorageから得点を取得して表示
       const score = JSON.parse(localStorage.getItem("score") || "{}");
       const scoreElement = document.getElementById("score");
 
-      if (score.first || score.second) {
+      if (score.self || score.opponent) {
         scoreElement.innerHTML =
-          (score.first ? score.first : "") +
-          (score.first && score.second ? "<br><br>" : "") +
-          (score.second ? score.second : "");
+          (score.self ? score.self : "") +
+          (score.self && score.opponent ? "<br><br>" : "") +
+          (score.opponent ? score.opponent : "");
       } else {
         scoreElement.innerHTML = "スコア未集計";
       }
