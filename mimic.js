@@ -113,12 +113,12 @@ if (scoreBtn) {
                 scorePhase.appendChild(resultBtn);
             }
             resultBtn.onclick = () => {
-                // 両方の得点をlocalStorageにまとめて保存
+                // 両方の得点をlocalStorageにまとめて保存（役割名で明示）
                 const score_first = JSON.parse(localStorage.getItem('score_first') || '{}');
                 const score_second = JSON.parse(localStorage.getItem('score_second') || '{}');
                 localStorage.setItem('score', JSON.stringify({
-                    first: score_first.player + 'の得点: ' + score_first.value + '点',
-                    second: score_second.player + 'の得点: ' + score_second.value + '点'
+                    first: '先攻の得点: ' + score_first.value + '点',
+                    second: '後攻の得点: ' + score_second.value + '点'
                 }));
                 window.location.href = 'result.html';
             };
