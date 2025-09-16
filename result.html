@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>リザルト画面</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-        #score { font-size: 1.5em; margin: 20px; }
-        button { font-size: 1em; padding: 10px 20px; }
-    </style>
-</head>
-<body>
-    <h1>リザルト</h1>
-    <div id="score">スコア未集計</div>
-    <button onclick="window.location.href='mimic.html'">もう一度</button>
-    <br><br>
-    <button onclick="window.location.href='index.html'">TOPに戻る</button>
+    <link rel="stylesheet" href="result.css" />
+  </head>
+  <body>
+    <div id="result-app">
+      <h1>リザルト</h1>
+      <div id="score">スコア未集計</div>
+      <div class="button-container">
+        <button class="retry-btn" onclick="window.location.href='mimic.html'">
+          もう一度
+        </button>
+        <button class="home-btn" onclick="window.location.href='index.html'">
+          TOPに戻る
+        </button>
+      </div>
+    </div>
+
     <script>
-        // localStorageから両方の得点を取得して表示
-        const score = JSON.parse(localStorage.getItem('score') || '{}');
-        document.getElementById('score').innerHTML =
-            (score.first ? score.first : '') + '<br>' +
-            (score.second ? score.second : '');
+      // localStorageから両方の得点を取得して表示
+      const score = JSON.parse(localStorage.getItem("score") || "{}");
+      const scoreElement = document.getElementById("score");
+
+      if (score.first || score.second) {
+        scoreElement.innerHTML =
+          (score.first ? score.first : "") +
+          (score.first && score.second ? "<br><br>" : "") +
+          (score.second ? score.second : "");
+      } else {
+        scoreElement.innerHTML = "スコア未集計";
+      }
     </script>
-</body>
+  </body>
 </html>
