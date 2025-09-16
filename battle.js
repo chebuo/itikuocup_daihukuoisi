@@ -47,18 +47,27 @@ function renderActionList() {
     // 下限3件未満なら送信ボタンを無効化
     document.getElementById('submit-actions').disabled = actions.length < 3;
 }
-
+document.getElementById('room-form').addEventListener('submit',async(e)=>{
+    e.preventDefault();
+    console.log("make room");
+    const roomKey=document.getElementById('room-key-input').value.trim();
+    if(!roomKey) return;
+    roomId=roomKey;
+    console.log(roomId);
+    messageRef=collection(db,"rooms",roomId,auth.currentUser.uid);
+    await addDoc(messageRef,{
+        user:auth.currentUser.uid || "empty",
+        action:actions,
+        timestamp:new Date()
+    });
+    console.log(messageRef);
+});
 // 行動送信（ダミー：相手待ち）
 document.getElementById('submit-actions').onclick = async() => {
     document.getElementById('wait-msg').style.display = '';
     // 通信で相手の行動受信後
-    const roomId="test";
-    messageRef=collection(db,"rooms",roomId,auth.currentUser.uid);
-    await addDoc(messageRef,{
-        user:auth.currentUser.uid || "empty",
-        timestamp:new Date()
-    });
-    console.log(messageRef);
+    const roomId=document.getElementById('room-key-input').value.trim();
+    
 };
 
 // 模倣フェーズ
