@@ -1,3 +1,19 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore, collection, addDoc,setDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAo6Teruh-6dPXACBAeJbH_lCmXzfTKt8M",
+  authDomain: "itikuo-37042.firebaseapp.com",
+  projectId: "itikuo-37042",
+  storageBucket: "itikuo-37042.firebasestorage.app",
+  messagingSenderId: "258262199926",
+  appId: "1:258262199926:web:03304ca76fb8cc4585f957",
+  measurementId: "G-6ZZXPQ2PE4"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 // --- 模倣アプリ用ロジック ---
 let actions = [];
 let results = [];
@@ -20,6 +36,7 @@ const resetBtn = document.getElementById('reset-btn');
 const inputTitle = document.getElementById('input-title');
 const mimicTitle = document.getElementById('mimic-title');
 
+//const userId=auth.currentUser ? auth.currentUser.uid : 'guest';
 function renderActions() {
     actionList.innerHTML = '';
     actions.forEach((act, idx) => {
@@ -27,6 +44,25 @@ function renderActions() {
         li.textContent = act;
         actionList.appendChild(li);
     });
+    let userId = 'guest';
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            userId = user.uid;
+            console.log(userId);
+        } else {
+            userId = 'guest';
+            console.log("no user");
+        }
+        const todoDoc=doc(db, 'todolist', userId); 
+    setDoc(todoDoc, {
+        actions: actions
+    }, { merge: true }).then(()=>{
+        console.log(todoDoc);
+    }).catch((error)=>{
+        console.log(error);
+    });
+    });
+    
 }
 
 if (actionForm) {
@@ -38,6 +74,7 @@ if (actionForm) {
             renderActions();
         }
     });
+
 }
 
 if (nextPhaseBtn) {
