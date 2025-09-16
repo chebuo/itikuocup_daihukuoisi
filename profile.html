@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>プロフィール画面</title>
+    <link rel="stylesheet" href="profile.css" />
+  </head>
+  <body>
+    <div class="profile-container">
+      <div class="profile-header">
+        <h1>プロフィール</h1>
+      </div>
+
+      <div class="profile-content">
+        <div class="success-message" id="successMessage"></div>
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- アバター部分 -->
+        <div class="avatar-section">
+          <div class="avatar-container">
+            <img
+              id="avatarImage"
+              class="avatar"
+              src=""
+              style="display: none"
+              alt="プロフィール画像"
+            />
+            <div id="avatarPlaceholder" class="avatar-placeholder">👤</div>
+            <button class="avatar-upload-btn" id="avatarUploadBtn">📷</button>
+          </div>
+          <div class="avatar-help-text" id="avatarHelpText">
+            画像をクリックして変更<br />
+            （JPG, PNG形式、5MB以下）
+          </div>
+          <input type="file" id="fileInput" accept="image/*" />
+        </div>
+
+        <!-- ユーザー名部分 -->
+        <div class="username-section">
+          <label class="username-label">ユーザー名</label>
+
+          <div class="username-display" id="usernameDisplay">
+            <span class="username-value" id="usernameValue">田中太郎</span>
+          </div>
+
+          <input
+            type="text"
+            class="username-input"
+            id="usernameInput"
+            placeholder="ユーザー名を入力"
+            maxlength="50"
+          />
+        </div>
+        <button class="btn editBtn" id="editBtn">編集</button>
+
+        <!-- ボタン -->
+        <div class="button-group" id="buttonGroup">
+          <button class="btn btn-cancel" id="cancelBtn">キャンセル</button>
+          <button class="btn btn-save" id="saveBtn">
+            <span id="saveText">💾 保存</span>
+            <div
+              class="loading-spinner"
+              id="loadingSpinner"
+              style="display: none"
+            ></div>
+          </button>
+        </div>
+
+        <!-- 実装メモ
+        <div class="implementation-note">
+          <h3>🔥 Firebase実装メモ:</h3>
+          <ul>
+            <li>Firebase Storage で画像アップロード</li>
+            <li>updateProfile() でプロフィール更新</li>
+            <li>Firestore でユーザー情報保存</li>
+            <li>onAuthStateChanged でリアルタイム同期</li>
+          </ul>
+        </div> -->
+      </div>
+    </div>
+
+    <script src="profile.js"></script>
+  </body>
+</html>

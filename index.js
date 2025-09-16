@@ -247,8 +247,14 @@ remove.addEventListener("click", () => {
   }
   storage.todoList = JSON.stringify(list);
 });
-function buttonClick() {
+function batuButtonClick() {
   window.location.href = "./batu.html";
 }
-let button = document.getElementById("batubtn");
-button.onclick = buttonClick;
+let batuButton = document.getElementById("batubtn");
+batuButton.onclick = batuButtonClick;
+
+function profileButtonClick() {
+  window.location.href = "./profile.html";
+}
+let profileButton = document.getElementById("profilebtn");
+profileButton.onclick = profileButtonClick;
