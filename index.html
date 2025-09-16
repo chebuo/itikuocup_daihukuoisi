@@ -1,31 +1,57 @@
 <!DOCTYPE html>
 <html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TODOアプリ</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
   <body>
-    <meta charset="uft-8" />
     <div id="input">
-      <label>TODO: <input id="todo" /></label><br />
-      優先度:
-      <select>
-        <option>低</option>
-        <option selected>普</option>
-        <option>高</option>
-      </select>
-      <label>期日: <input type="date" /></label><br />
+      <label
+        >TODO: <input id="todo" placeholder="タスクを入力してください" /></label
+      ><br />
+
+      <label>優先度:</label>
+      <select id="priority">
+        <option value="低">低</option>
+        <option value="普" selected>普</option>
+        <option value="高">高</option></select
+      ><br />
+
+      <label>期日: <input type="date" id="deadline" /></label><br />
+
       <button id="submit">登録</button>
-      <table>
-        <tr>
-          <th>TODO</th>
-          <th>優先度</th>
-          <th>期日</th>
-        </tr>
+
+      <table id="todo-table">
+        <thead>
+          <tr>
+            <th>TODO</th>
+            <th>優先度</th>
+            <th>期日</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- TODOアイテムがここに追加される -->
+        </tbody>
       </table>
     </div>
-    <main></main>
+
+    <main>
+      <!-- メインコンテンツエリア -->
+      <p>TODOを管理しましょう！上記フォームからタスクを追加できます。</p>
+    </main>
+
     <hr />
-    <button onclick="window.open('mimic.html', '_blank')">
-      模倣アプリを開く
-    </button>
-    <button type="button" id="batubtn">始める</button>
+
+    <div class="bottom-buttons">
+      <button onclick="window.open('mimic.html', '_blank')">
+        模倣アプリを開く
+      </button>
+      <button type="button" id="batubtn">始める</button>
+    </div>
+
     <script src="index.js"></script>
   </body>
 </html>
