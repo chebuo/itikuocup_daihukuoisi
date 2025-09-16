@@ -1,34 +1,46 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>模倣アプリ</title>
-</head>
-<body>
+    <link rel="stylesheet" href="mimic-styles.css" />
+  </head>
+  <body>
     <h2>模倣アプリ（仮画面）</h2>
     <div id="mimic-app">
-        <div id="input-phase">
-            <h3 id="input-title">一人目：行動入力</h3>
-            <form id="action-form">
-                <input type="text" id="action-input" placeholder="行動を入力" required>
-                <button type="submit">追加</button>
-            </form>
-            <ul id="action-list"></ul>
-            <button id="next-phase-btn">翌日に進む</button>
+      <div id="input-phase">
+        <h3 id="input-title">一人目：行動入力</h3>
+        <form id="action-form">
+          <input
+            type="text"
+            id="action-input"
+            placeholder="行動を入力"
+            required
+          />
+          <button type="submit">追加</button>
+        </form>
+        <ul id="action-list"></ul>
+        <div class="button-container">
+          <button id="next-phase-btn">翌日に進む</button>
         </div>
-        <div id="mimic-phase" style="display:none;">
-            <h3 id="mimic-title">二人目：模倣・結果記録</h3>
-            <ul id="mimic-list"></ul>
-            <button id="score-btn">点数化</button>
+      </div>
+      <div id="mimic-phase" style="display: none">
+        <h3 id="mimic-title">二人目：模倣・結果記録</h3>
+        <ul id="mimic-list"></ul>
+        <div class="button-container">
+          <button id="score-btn">点数化</button>
         </div>
-        <div id="score-phase" style="display:none;">
-            <h3>結果</h3>
-            <p id="score-result"></p>
-            <button id="swap-btn">先攻後攻入替</button>
-            <button id="reset-btn">リセット</button>
+      </div>
+      <div id="score-phase" style="display: none">
+        <h3>結果</h3>
+        <p id="score-result"></p>
+        <div class="button-container">
+          <button id="swap-btn">先攻後攻入替</button>
+          <button id="reset-btn">リセット</button>
         </div>
+      </div>
     </div>
     <script src="mimic.js"></script>
-</body>
+  </body>
 </html>
