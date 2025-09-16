@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>やったこと対戦</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 40px; }
+        .section { margin: 30px auto; padding: 20px; border: 1px solid #ccc; width: 350px; border-radius: 8px; }
+        h2 { margin-bottom: 10px; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 8px 0; }
+        button { margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>やったこと対戦</h1>
+
+    <!-- やったこと入力 -->
+    <div class="section" id="input-phase">
+        <h2>今日やったことを入力</h2>
+        <form id="action-form">
+            <input type="text" id="action-input" placeholder="やったこと" required>
+            <button type="submit">追加</button>
+        </form>
+        <ul id="action-list"></ul>
+        <button id="submit-actions">リストを送信</button>
+        <p id="wait-msg" style="display:none;">相手の入力を待っています...</p>
+    </div>
+
+    <!-- 相手のリスト受信＆点数化 -->
+    <div class="section" id="mimic-phase" style="display:none;">
+        <h2>相手のやったことリスト</h2>
+        <ul id="opponent-action-list"></ul>
+        <h3>模倣結果</h3>
+        <ul id="mimic-result-list"></ul>
+        <button id="submit-mimic">点数化してリザルトへ</button>
+        <p id="wait-mimic-msg" style="display:none;">相手の模倣結果を待っています...</p>
+    </div>
+
+    <!-- リザルト -->
+    <div class="section" id="result-phase" style="display:none;">
+        <h2>リザルト</h2>
+        <div id="score"></div>
+        <button onclick="window.location.reload()">もう一度対戦</button>
+    </div>
+
+    <script src="battle.js"></script>
+</body>
+</html>
