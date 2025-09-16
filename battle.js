@@ -1,3 +1,22 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore,getDoc, collection, addDoc,setDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAo6Teruh-6dPXACBAeJbH_lCmXzfTKt8M",
+  authDomain: "itikuo-37042.firebaseapp.com",
+  projectId: "itikuo-37042",
+  storageBucket: "itikuo-37042.firebasestorage.app",
+  messagingSenderId: "258262199926",
+  appId: "1:258262199926:web:03304ca76fb8cc4585f957",
+  measurementId: "G-6ZZXPQ2PE4"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+let roomId=[];
+let messageRef=null;
 // 通信・マッチングは既存実装前提
 // 画面遷移・入力例のみ（ローカル動作用ダミー）
 
@@ -30,14 +49,16 @@ function renderActionList() {
 }
 
 // 行動送信（ダミー：相手待ち）
-document.getElementById('submit-actions').onclick = () => {
+document.getElementById('submit-actions').onclick = async() => {
     document.getElementById('wait-msg').style.display = '';
     // 通信で相手の行動受信後
-    setTimeout(() => {
-        document.getElementById('input-phase').style.display = 'none';
-        document.getElementById('mimic-phase').style.display = '';
-        renderOpponentActions(['相手の行動A', '相手の行動B']);
-    }, 1500);
+    const roomId="test";
+    messageRef=collection(db,"rooms",roomId,auth.currentUser.uid);
+    await addDoc(messageRef,{
+        user:auth.currentUser.uid || "empty",
+        timestamp:new Date()
+    });
+    console.log(messageRef);
 };
 
 // 模倣フェーズ
