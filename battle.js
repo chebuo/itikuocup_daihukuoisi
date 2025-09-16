@@ -6,11 +6,16 @@ const actions = [];
 document.getElementById('action-form').onsubmit = e => {
     e.preventDefault();
     const val = document.getElementById('action-input').value.trim();
-    if (val) {
-        actions.push(val);
-        document.getElementById('action-input').value = '';
-        renderActionList();
+    if (!val) return;
+    if (actions.length >= 5) {
+        alert('やったことは最大5件までです');
+        return;
     }
+    actions.push(val);
+    document.getElementById('action-input').value = '';
+    renderActionList();
+    // 下限3件未満なら送信ボタンを無効化
+    document.getElementById('submit-actions').disabled = actions.length < 3;
 };
 function renderActionList() {
     const ul = document.getElementById('action-list');
@@ -20,6 +25,8 @@ function renderActionList() {
         li.textContent = act;
         ul.appendChild(li);
     });
+    // 下限3件未満なら送信ボタンを無効化
+    document.getElementById('submit-actions').disabled = actions.length < 3;
 }
 
 // 行動送信（ダミー：相手待ち）
