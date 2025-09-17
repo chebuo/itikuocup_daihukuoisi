@@ -84,9 +84,6 @@ class TodoAnalyzer {
         throw new Error("分析するTodoデータがありません");
       }
 
-      // 統計情報を更新
-      this.updateStats(todos);
-
       // AIに送信するためのプロンプトを作成
       const analysisPrompt = this.createAnalysisPrompt(todos);
 
@@ -112,70 +109,155 @@ class TodoAnalyzer {
         const data = todoDoc.data();
         const todos = [];
 
-        // ドキュメント内のすべてのフィールドをチェック
-        // actions、guest、その他のフィールドがTodoアイテムの可能性
-        Object.keys(data).forEach((key) => {
-          const item = data[key];
+        console.log("取得したFirestoreデータ:", data);
 
-          // オブジェクトで、Todoっぽいプロパティを持つものを抽出
-          if (typeof item === "object" && item !== null) {
-            // 一般的なTodoプロパティをチェック
-            if (item.title || item.text || item.task || item.description) {
-              todos.push({
-                id: key,
-                title: item.title || item.text || item.task || item.description,
-                completed: item.completed || item.done || false,
-                priority: item.priority || "通常",
-                category: item.category || "その他",
-                createdAt:
-                  item.createdAt ||
-                  item.created ||
-                  item.timestamp ||
-                  new Date(),
-                ...item, // 他のプロパティも含める
+        // actionsフィールドを確認（新しいオブジェクト形式に対応）
+        if (data.actions && Array.isArray(data.actions)) {
+          data.actions.forEach((actionGroup, groupIndex) => {
+            // オブジェクト形式の場合（新しい形式）
+            if (
+              typeof actionGroup === "object" &&
+              actionGroup !== null &&
+              actionGroup.actions
+            ) {
+              if (Array.isArray(actionGroup.actions)) {
+                actionGroup.actions.forEach((action, actionIndex) => {
+                  todos.push({
+                    id: `group-${groupIndex}-action-${actionIndex}`,
+                    title: action,
+                    priority: "通常",
+                    category: `グループ${groupIndex + 1}`,
+                    createdAt: actionGroup.timestamp || new Date(),
+                    groupIndex: groupIndex,
+                    actionIndex: actionIndex,
+                    originalGroup: actionGroup.actions,
+                  });
+                });
+              }
+            }
+            // 配列形式の場合（従来の形式）
+            else if (Array.isArray(actionGroup)) {
+              actionGroup.forEach((action, actionIndex) => {
+                todos.push({
+                  id: `group-${groupIndex}-action-${actionIndex}`,
+                  title: action,
+                  priority: "通常",
+                  category: `グループ${groupIndex + 1}`,
+                  createdAt: new Date(),
+                  groupIndex: groupIndex,
+                  actionIndex: actionIndex,
+                  originalGroup: actionGroup,
+                });
               });
+            }
+            // 文字列の場合
+            else if (typeof actionGroup === "string") {
+              todos.push({
+                id: `single-${groupIndex}`,
+                title: actionGroup,
+                priority: "通常",
+                category: "単体アクション",
+                createdAt: new Date(),
+                groupIndex: groupIndex,
+              });
+            }
+          });
+        }
+
+        // 他のフィールドもチェック（従来のTodo形式用）
+        Object.keys(data).forEach((key) => {
+          if (key !== "actions") {
+            const item = data[key];
+            if (typeof item === "object" && item !== null) {
+              if (item.title || item.text || item.task || item.description) {
+                todos.push({
+                  id: key,
+                  title:
+                    item.title || item.text || item.task || item.description,
+                  priority: item.priority || "通常",
+                  category: item.category || "その他",
+                  createdAt:
+                    item.createdAt ||
+                    item.created ||
+                    item.timestamp ||
+                    new Date(),
+                  ...item,
+                });
+              }
             }
           }
         });
 
+        console.log(`取得したTodos: ${todos.length}件`, todos);
         return todos;
       } else {
-        throw new Error("Todoドキュメントが存在しません");
+        console.log("Todoドキュメントが存在しません");
+        return []; // エラーを投げずに空の配列を返す
       }
     } catch (error) {
+      console.error("Todoデータの取得エラー:", error);
       throw new Error(`Todoデータの取得に失敗しました: ${error.message}`);
     }
   }
 
   createAnalysisPrompt(todos) {
-    const todoText = todos
-      .map((todo) => {
-        const status = todo.completed ? "完了" : "未完了";
+    // グループ別に整理
+    const groupedTodos = {};
+    const singleTodos = [];
+
+    todos.forEach((todo) => {
+      if (todo.groupIndex !== undefined) {
+        if (!groupedTodos[todo.groupIndex]) {
+          groupedTodos[todo.groupIndex] = [];
+        }
+        groupedTodos[todo.groupIndex].push(todo);
+      } else {
+        singleTodos.push(todo);
+      }
+    });
+
+    let todoText = "";
+
+    // グループ別に表示
+    Object.keys(groupedTodos).forEach((groupIndex) => {
+      todoText += `\n【セッション${parseInt(groupIndex) + 1}】\n`;
+      groupedTodos[groupIndex].forEach((todo) => {
+        const createdAt = todo.createdAt
+          ? todo.createdAt.toDate
+            ? todo.createdAt.toDate().toLocaleDateString("ja-JP")
+            : new Date(todo.createdAt).toLocaleDateString("ja-JP")
+          : "日付不明";
+        todoText += `  - ${todo.title} [${status}] [作成日: ${createdAt}]\n`;
+      });
+    });
+
+    // 単体のTodoがある場合
+    if (singleTodos.length > 0) {
+      todoText += `\n【その他のタスク】\n`;
+      singleTodos.forEach((todo) => {
         const priority = todo.priority || "通常";
         const category = todo.category || "その他";
         const createdAt = todo.createdAt
-          ? new Date(todo.createdAt.toDate()).toLocaleDateString("ja-JP")
+          ? todo.createdAt.toDate
+            ? todo.createdAt.toDate().toLocaleDateString("ja-JP")
+            : new Date(todo.createdAt).toLocaleDateString("ja-JP")
           : "日付不明";
 
-        return `- ${
-          todo.title || todo.text
-        } [${status}] [優先度: ${priority}] [カテゴリ: ${category}] [作成日: ${createdAt}]`;
-      })
-      .join("\n");
+        todoText += `  - ${todo.title} [${status}] [優先度: ${priority}] [カテゴリ: ${category}] [作成日: ${createdAt}]\n`;
+      });
+    }
 
-    return `以下のTodoリストを分析して、ユーザーのタスク管理の傾向、改善点、おすすめのアクションを日本語で教えてください。
+    return `以下のアクションリストを分析して、ユーザーの行動パターン、傾向、改善点を日本語で教えてください。また、はい、わかりました、などの返答は不要です。親しみやすく、具体的で実行可能なアドバイスをお願いします。
+    加えてこれらのリストはユーザーが実行した物のみを含み、未実行のタスクは含まれていません。
 
-Todoリスト:
+アクションリスト:
 ${todoText}
 
 分析の観点:
-1. タスクの完了率と傾向
-2. 優先度の設定状況
-3. カテゴリ別の分析
-4. 時間管理の状況
-5. 改善提案
-
-親しみやすく、具体的で実行可能なアドバイスをお願いします。`;
+1. セッションごとの特徴や傾向
+2. 行動の多様性や偏り
+3. 継続性のあるアクション
+4. 改善提案とモチベーション向上のアドバイス`;
   }
 
   async callGeminiAPI(prompt) {
@@ -220,31 +302,56 @@ ${todoText}
     }
   }
 
-  updateStats(todos) {
-    const totalTodos = todos.length;
-    const completedTodos = todos.filter((todo) => todo.completed).length;
-    const pendingTodos = totalTodos - completedTodos;
-    const completionRate =
-      totalTodos > 0 ? Math.round((completedTodos / totalTodos) * 100) : 0;
-
-    document.getElementById("totalTodos").textContent = totalTodos;
-    document.getElementById("completedTodos").textContent = completedTodos;
-    document.getElementById("pendingTodos").textContent = pendingTodos;
-    document.getElementById(
-      "completionRate"
-    ).textContent = `${completionRate}%`;
-
-    this.showStats();
-  }
-
   displayResults(analysisText) {
     const analysisTextElement = document.getElementById("analysisText");
     const lastUpdatedElement = document.getElementById("lastUpdated");
 
-    analysisTextElement.textContent = analysisText;
+    // Markdown形式のテキストをHTMLに変換して表示
+    const formattedHTML = this.convertMarkdownToHTML(analysisText);
+    analysisTextElement.innerHTML = formattedHTML;
+
     lastUpdatedElement.textContent = new Date().toLocaleString("ja-JP");
 
     this.showResults();
+  }
+
+  convertMarkdownToHTML(text) {
+    // 簡単なMarkdown -> HTML変換
+    let html = text;
+
+    // 見出し変換
+    html = html.replace(/^### (.+)$/gm, "<h3>$1</h3>");
+    html = html.replace(/^## (.+)$/gm, "<h2>$1</h2>");
+    html = html.replace(/^# (.+)$/gm, "<h1>$1</h1>");
+
+    // 太字変換
+    html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+    // 箇条書き変換（- で始まる行）
+    html = html.replace(/^- (.+)$/gm, "<li>$1</li>");
+
+    // リスト要素をulタグで囲む
+    html = html.replace(/(<li>.*<\/li>\s*)+/gs, "<ul>$&</ul>");
+
+    // 番号付きリスト変換（数字. で始まる行）
+    html = html.replace(/^\d+\. (.+)$/gm, "<li>$1</li>");
+
+    // 連続するliタグをolタグで囲む（番号付きリスト用）
+    html = html.replace(/^(\d+\. .+$\n?)+/gm, (match) => {
+      const items = match.replace(/^\d+\. (.+)$/gm, "<li>$1</li>");
+      return "<ol>" + items + "</ol>";
+    });
+
+    // 改行を<br>に変換（ただし、既にHTMLタグで囲まれている部分は除く）
+    html = html.replace(/\n(?![<\/])/g, "<br>");
+
+    // 余分なbrタグを削除
+    html = html.replace(/<br>\s*<\/h[1-6]>/g, "</h3>");
+    html = html.replace(/<br>\s*<\/li>/g, "</li>");
+    html = html.replace(/<br>\s*<\/(ul|ol)>/g, "</$1>");
+    html = html.replace(/<(ul|ol)>\s*<br>/g, "<$1>");
+
+    return html;
   }
 
   showLoading() {
@@ -263,10 +370,6 @@ ${todoText}
 
   hideResults() {
     document.getElementById("analysisResults").classList.add("hidden");
-  }
-
-  showStats() {
-    document.getElementById("todoStats").classList.remove("hidden");
   }
 
   showError(message) {
