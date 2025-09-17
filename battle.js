@@ -157,7 +157,7 @@ function renderOpponentActions(opponentActions) {
                 action:act,
                 timestamp:new Date()
             }).then(()=>{
-                console.log("seikou");
+                console.log(imageRef.path);
             }).catch((error)=>{
                 console.log(error);
             });
@@ -165,7 +165,7 @@ function renderOpponentActions(opponentActions) {
             console.log(base64);
             console.log("uploadekita");
         };
-        };
+    };
         console.log(li);
     });
     // 模倣結果入力
@@ -185,8 +185,8 @@ function renderOpponentActions(opponentActions) {
         });
         resultUl.appendChild(li);
     });
-    resultUl.appendChild(li);
 
+}
 
 function updateResultList() {
   const resultUl = document.getElementById("mimic-result-list");
@@ -203,6 +203,18 @@ document.getElementById('submit-mimic').onclick = async() => {
     
     document.getElementById('wait-mimic-msg').style.display = '';
     // 通信で相手の模倣結果受信後（ダミー）
+    const roomId = document.getElementById("room-key-input").value.trim();
+    const targetDoc=collection(db,'rooms',roomId,'players');
+    const targetSnap=await getDocs(targetDoc);
+    const uids=targetSnap.docs.map(doc=>doc.id);
+    console.log(uids);
+    for(const uid of uids){
+        if(uid===auth.currentUser.uid) continue;
+        const imageCol=collection(db,'rooms',roomId,'players',uid,'images');
+        const imageSnap=await getDocs(imageCol);
+        console.log(imageSnap);
+        //console.log('images:',imageSnap.docs.map(d=>d.id));
+    }
     setTimeout(() => {
         // 〇△✕の選択に応じて点数計算
         const resultUl = document.getElementById('mimic-result-list');
@@ -219,4 +231,3 @@ document.getElementById('submit-mimic').onclick = async() => {
         window.location.href = 'result.html';
     }, 1500);
 };
-}
