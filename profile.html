@@ -31,7 +31,7 @@
           </div>
           <div class="avatar-help-text" id="avatarHelpText">
             画像をクリックして変更<br />
-            （JPG, PNG形式、5MB以下）
+            （JPG, PNG形式、自動リサイズ）
           </div>
           <input type="file" id="fileInput" accept="image/*" />
         </div>
@@ -52,9 +52,11 @@
             maxlength="50"
           />
         </div>
+
+        <!-- 編集ボタン -->
         <button class="btn editBtn" id="editBtn">編集</button>
 
-        <!-- ボタン -->
+        <!-- ボタングループ -->
         <div class="button-group" id="buttonGroup">
           <button class="btn btn-cancel" id="cancelBtn">キャンセル</button>
           <button class="btn btn-save" id="saveBtn">
@@ -66,19 +68,13 @@
             ></div>
           </button>
         </div>
-
-        <!-- 実装メモ
-        <div class="implementation-note">
-          <h3>🔥 Firebase実装メモ:</h3>
-          <ul>
-            <li>Firebase Storage で画像アップロード</li>
-            <li>updateProfile() でプロフィール更新</li>
-            <li>Firestore でユーザー情報保存</li>
-            <li>onAuthStateChanged でリアルタイム同期</li>
-          </ul>
-        </div> -->
       </div>
     </div>
+
+    <!-- Firebase SDKの読み込み（CDN版） -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script src="profile.js"></script>
   </body>

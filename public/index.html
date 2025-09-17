@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>対戦ゲーム - ホーム</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1 class="game-title">対戦ゲーム</h1>
+        <p class="game-subtitle">行動評価バトル</p>
+      </header>
+
+      <main class="main-content">
+        <div class="welcome-section">
+          <h2 id="welcome-message">ようこそ！</h2>
+          <p class="description">
+            2人で行う対戦ゲームです。<br />
+            各プレイヤーが行動を入力し、相手の行動を評価して点数を競います。
+          </p>
+        </div>
+
+        <div class="button-section">
+          <button id="profile-btn" class="menu-button profile-btn">
+            <span class="button-icon">👤</span>
+            <span id="profile-text">ログイン/新規登録</span>
+          </button>
+
+          <button id="battle-btn" class="menu-button battle-btn">
+            <span class="button-icon">⚔️</span>
+            <span>対戦開始</span>
+          </button>
+        </div>
+
+        <div class="game-rules">
+          <h3>ゲームの流れ</h3>
+          <ol class="rules-list">
+            <li>プレイヤー名を設定</li>
+            <li>各プレイヤーが行動を入力</li>
+            <li>行動を交換して相手の行動を確認</li>
+            <li>相手の行動を○×△で評価（○3点、△1点、×0点）</li>
+            <li>結果発表</li>
+          </ol>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <p>&copy; 2024 対戦ゲーム</p>
+      </footer>
+
+      <!-- Loading indicator -->
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>読み込み中...</p>
+      </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="index.js"></script>
+  </body>
+</html>
