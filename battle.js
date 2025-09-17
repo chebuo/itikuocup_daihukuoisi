@@ -7,7 +7,6 @@ import {
   setDoc,
   getDocs,
   doc,
-  docs,
   onSnapshot,
   query,
   orderBy,
@@ -143,7 +142,7 @@ function renderOpponentActions(opponentActions) {
             reader.readAsDataURL(file);
             reader.onload=async()=>{
                 const base64=reader.result;
-            const imageRef=doc(db,'rooms',roomId,'players',auth.currentUser.uid,'images','todo');
+            const imageRef=doc(db,'rooms',roomId,'players',auth.currentUser.uid,'images',file.name);
             await setDoc(imageRef,{
                 image:base64,
                 action:act,
@@ -157,7 +156,7 @@ function renderOpponentActions(opponentActions) {
             console.log(base64);
             console.log("uploadekita");
         };
-        };
+    };
         console.log(li);
     });
     // 模倣結果入力
@@ -178,6 +177,7 @@ function renderOpponentActions(opponentActions) {
         resultUl.appendChild(li);
     });
 
+}
 
 function updateResultList() {
   const resultUl = document.getElementById("mimic-result-list");
@@ -200,15 +200,12 @@ document.getElementById('submit-mimic').onclick = async() => {
     const uids=targetSnap.docs.map(doc=>doc.id);
     console.log(uids);
     for(const uid of uids){
-        const imageCol=collection(db,'rooms',roomId,'players',uid,'images','todo');
+        if(uid===auth.currentUser.uid) continue;
+        const imageCol=collection(db,'rooms',roomId,'players',uid,'images');
         const imageSnap=await getDocs(imageCol);
-        console.log('images:',imageSnap.docs.map(d=>d.id));
+        console.log(imageSnap);
+        //console.log('images:',imageSnap.docs.map(d=>d.id));
     }
-
-    const imageDoc=collection(db,'rooms',roomId,'players',auth.currentUser.uid,'images','todo');
-    await getDocs(imageDoc,{
-
-    });
     setTimeout(() => {
         // 〇△✕の選択に応じて点数計算
         const resultUl = document.getElementById('mimic-result-list');
@@ -225,4 +222,3 @@ document.getElementById('submit-mimic').onclick = async() => {
         window.location.href = 'result.html';
     }, 1500);
 };
-}
