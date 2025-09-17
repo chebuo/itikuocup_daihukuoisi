@@ -229,6 +229,6 @@ document.getElementById('submit-mimic').onclick = async() => {
             self: `あなたの得点: ${score}点`,
             opponent: `相手の得点: 5点`
         }));
-        //window.location.href = 'result.html';
+        window.location.href = 'result.html';
     }, 50000);
 };
