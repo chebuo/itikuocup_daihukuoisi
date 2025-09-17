@@ -66,6 +66,11 @@ battleBtn.onclick = () => {
   window.location.href = "/battle.html"; // or wherever your React app is served
 };
 
+AI_btn.onclick = () => {
+  // Navigate to game (React app)
+  window.location.href = "/todo-analysis.html"; // or wherever your React app is served
+};
+
 // Add logout functionality for authenticated users
 profileBtn.addEventListener("contextmenu", (e) => {
   if (auth.currentUser) {
