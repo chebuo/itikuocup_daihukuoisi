@@ -209,4 +209,5 @@ document.getElementById('submit-mimic').onclick = async() => {
         }));
         window.location.href = 'result.html';
     }, 1500);
-});
+};
+}
