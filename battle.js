@@ -7,6 +7,7 @@ import {
   setDoc,
   getDocs,
   doc,
+  docs,
   onSnapshot,
   query,
   orderBy,
@@ -142,13 +143,13 @@ function renderOpponentActions(opponentActions) {
             reader.readAsDataURL(file);
             reader.onload=async()=>{
                 const base64=reader.result;
-            const imageRef=doc(db,'rooms',roomId,'players',auth.currentUser.uid,'images',file.name);
+            const imageRef=doc(db,'rooms',roomId,'players',auth.currentUser.uid,'images','todo');
             await setDoc(imageRef,{
                 image:base64,
                 action:act,
                 timestamp:new Date()
             }).then(()=>{
-                console.log("seikou");
+                console.log(imageRef.path);
             }).catch((error)=>{
                 console.log(error);
             });
@@ -176,7 +177,6 @@ function renderOpponentActions(opponentActions) {
         });
         resultUl.appendChild(li);
     });
-    resultUl.appendChild(li);
 
 
 function updateResultList() {
@@ -194,6 +194,21 @@ document.getElementById('submit-mimic').onclick = async() => {
     
     document.getElementById('wait-mimic-msg').style.display = '';
     // 通信で相手の模倣結果受信後（ダミー）
+    const roomId = document.getElementById("room-key-input").value.trim();
+    const targetDoc=collection(db,'rooms',roomId,'players');
+    const targetSnap=await getDocs(targetDoc);
+    const uids=targetSnap.docs.map(doc=>doc.id);
+    console.log(uids);
+    for(const uid of uids){
+        const imageCol=collection(db,'rooms',roomId,'players',uid,'images','todo');
+        const imageSnap=await getDocs(imageCol);
+        console.log('images:',imageSnap.docs.map(d=>d.id));
+    }
+
+    const imageDoc=collection(db,'rooms',roomId,'players',auth.currentUser.uid,'images','todo');
+    await getDocs(imageDoc,{
+
+    });
     setTimeout(() => {
         // 〇△✕の選択に応じて点数計算
         const resultUl = document.getElementById('mimic-result-list');
