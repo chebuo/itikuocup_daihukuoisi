@@ -180,6 +180,7 @@ body {
 .button-group {
   display: none;
   gap: 12px;
+  margin-top: 20px;
 }
 
 .button-group.show {
@@ -227,12 +228,14 @@ body {
 }
 
 .editBtn {
-  background: #2c811e;
+  width: 100%;
+  background: #28a745;
   color: white;
+  margin-bottom: 20px;
 }
 
 .editBtn:hover:not(:disabled) {
-  background: #226717;
+  background: #218838;
   transform: translateY(-1px);
 }
 
@@ -276,32 +279,6 @@ body {
   border-radius: 10px;
   margin-bottom: 20px;
   display: none;
-}
-
-/* 実装メモ */
-.implementation-note {
-  background: #fff3cd;
-  border: 2px solid #ffeaa7;
-  border-radius: 10px;
-  padding: 20px;
-  margin-top: 20px;
-}
-
-.implementation-note h3 {
-  color: #856404;
-  margin-bottom: 12px;
-  font-size: 16px;
-}
-
-.implementation-note ul {
-  color: #856404;
-  font-size: 14px;
-  line-height: 1.5;
-  list-style-position: inside;
-}
-
-.implementation-note li {
-  margin-bottom: 4px;
 }
 
 /* ファイル入力非表示 */
