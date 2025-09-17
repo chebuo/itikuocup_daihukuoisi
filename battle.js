@@ -107,19 +107,19 @@ function renderOpponentActions(opponentActions) {
             reader.readAsDataURL(file);
             reader.onload=async()=>{
                 const base64=reader.result;
-            
-            await setDoc(doc(db,'images',`${auth.currentUser.uid}_${act}`),{
+            const imageRef=doc(db,'rooms',roomId,'players',auth.currentUser.uid,'images',file.name);
+            await setDoc(imageRef,{
                 image:base64,
                 action:act,
                 timestamp:new Date()
             }).then(()=>{
-                console.log("document written");
+                console.log("seikou");
             }).catch((error)=>{
                 console.log(error);
             });
             
             console.log(base64);
-            console.log("upload done");
+            console.log("uploadekita");
         };
         };
         console.log(li);
