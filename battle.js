@@ -53,15 +53,24 @@ document.getElementById("action-form").onsubmit = (e) => {
   document.getElementById("submit-actions").disabled = actions.length < 3;
 };
 function renderActionList() {
-  const ul = document.getElementById("action-list");
-  ul.innerHTML = "";
-  actions.forEach((act) => {
-    const li = document.createElement("li");
-    li.textContent = act;
-    ul.appendChild(li);
-  });
-  // 下限3件未満なら送信ボタンを無効化
-  document.getElementById("submit-actions").disabled = actions.length < 3;
+    const ul = document.getElementById('action-list');
+    ul.innerHTML = '';
+    actions.forEach((act, idx) => {
+        const li = document.createElement('li');
+        li.textContent = act;
+        // 削除ボタン追加
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '削除';
+        delBtn.style.marginLeft = '8px';
+        delBtn.onclick = () => {
+            actions.splice(idx, 1);
+            renderActionList();
+        };
+        li.appendChild(delBtn);
+        ul.appendChild(li);
+    });
+    // 下限3件未満なら送信ボタンを無効化
+    document.getElementById('submit-actions').disabled = actions.length < 3;
 }
 ////ルームを作成ボタンを押したとき
 document.getElementById("room-form").addEventListener("submit", async (e) => {
