@@ -74,14 +74,18 @@ document.getElementById('room-form').addEventListener('submit',async(e)=>{
         targetActions=doc.data().action;
     });
     console.log(targetActions);//相手のデータを取得
+    // 受信した相手のリストを画面に表示
+    renderOpponentActions(targetActions);
+    // mimic-phaseを表示、input-phaseを非表示
+    document.getElementById('mimic-phase').style.display = '';
+    document.getElementById('input-phase').style.display = 'none';
 });
 
 // 行動送信（ダミー：相手待ち）
 document.getElementById('submit-actions').onclick = async() => {
     document.getElementById('wait-msg').style.display = '';
-    // 通信で相手の行動受信後
+    // 通信で相手の行動受信後       const roomId=document.getElementById('room-key-input').value.trim();
     const roomId=document.getElementById('room-key-input').value.trim();
-    
 };
 
 // 模倣フェーズ
