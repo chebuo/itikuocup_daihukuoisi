@@ -177,8 +177,8 @@ function renderOpponentActions(opponentActions) {
         resultUl.appendChild(li);
     });
     resultUl.appendChild(li);
-  });
-}
+
+
 function updateResultList() {
   const resultUl = document.getElementById("mimic-result-list");
   Array.from(resultUl.children).forEach((li) => {
@@ -209,4 +209,4 @@ document.getElementById('submit-mimic').onclick = async() => {
         }));
         window.location.href = 'result.html';
     }, 1500);
-};
+});

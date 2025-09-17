@@ -6,7 +6,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
+    "public": "itikuocup_daihukuoisi",
     "ignore": [
       "firebase.json",
       "**/.*",
