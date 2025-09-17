@@ -142,7 +142,7 @@ function renderOpponentActions(opponentActions) {
             reader.readAsDataURL(file);
             reader.onload=async()=>{
                 const base64=reader.result;
-            const imageRef=doc(db,'rooms',roomId,'players',auth.currentUser.uid,'images',file.name);
+            const imageRef=doc(db,'rooms',roomId,'players',auth.currentUser.uid,'images');
             await setDoc(imageRef,{
                 image:base64,
                 action:act,
@@ -198,13 +198,14 @@ document.getElementById('submit-mimic').onclick = async() => {
     const targetDoc=collection(db,'rooms',roomId,'players');
     const targetSnap=await getDocs(targetDoc);
     const uids=targetSnap.docs.map(doc=>doc.id);
-    console.log(uids);
+    //console.log(uids);
     for(const uid of uids){
         if(uid===auth.currentUser.uid) continue;
         const imageCol=collection(db,'rooms',roomId,'players',uid,'images');
         const imageSnap=await getDocs(imageCol);
-        console.log(imageSnap);
-        //console.log('images:',imageSnap.docs.map(d=>d.id));
+        const images=imageSnap.docs.map(doc=>doc.data());
+        console.log(images);//証拠のデータ配列
+        console.log('images:',imageSnap.docs.map(d=>d.id));
     }
     setTimeout(() => {
         // 〇△✕の選択に応じて点数計算
@@ -219,6 +220,6 @@ document.getElementById('submit-mimic').onclick = async() => {
             self: `あなたの得点: ${score}点`,
             opponent: `相手の得点: 5点`
         }));
-        window.location.href = 'result.html';
-    }, 1500);
+        //window.location.href = 'result.html';
+    }, 50000);
 };
