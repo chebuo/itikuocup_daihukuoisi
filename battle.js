@@ -33,6 +33,7 @@ const auth = getAuth(app);
 let roomId = [];
 let messageRef = null;
 // 通信・マッチングは既存実装前提
+
 // 画面遷移・入力例のみ（ローカル動作用ダミー）
 
 // 行動入力
@@ -125,27 +126,55 @@ document.getElementById("submit-actions").onclick = async () => {
 
 // 模倣フェーズ
 function renderOpponentActions(opponentActions) {
-  const ul = document.getElementById("opponent-action-list");
-  ul.innerHTML = "";
-  opponentActions.forEach((act) => {
-    const li = document.createElement("li");
-    li.textContent = act;
-    ul.appendChild(li);
-  });
-  // 模倣結果入力
-  const resultUl = document.getElementById("mimic-result-list");
-  resultUl.innerHTML = "";
-  opponentActions.forEach((act, idx) => {
-    const li = document.createElement("li");
-    li.textContent = act + "：";
-    ["〇", "△", "✕"].forEach((mark) => {
-      const btn = document.createElement("button");
-      btn.textContent = mark;
-      btn.onclick = () => {
-        li.dataset.result = mark;
-        updateResultList();
-      };
-      li.appendChild(btn);
+    const ul = document.getElementById('opponent-action-list');
+    ul.innerHTML = '';
+    opponentActions.forEach(act => {
+        const li = document.createElement('li');
+        li.textContent = act;
+        ul.appendChild(li);
+        const fileInput=li.appendChild(document.createElement('input'));
+        fileInput.type='file';
+        fileInput.accept='image/*';
+        fileInput.onchange=async(e)=>{
+            const file=e.target.files[0];
+            if(!file) return;
+            const reader=new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload=async()=>{
+                const base64=reader.result;
+            const imageRef=doc(db,'rooms',roomId,'players',auth.currentUser.uid,'images',file.name);
+            await setDoc(imageRef,{
+                image:base64,
+                action:act,
+                timestamp:new Date()
+            }).then(()=>{
+                console.log("seikou");
+            }).catch((error)=>{
+                console.log(error);
+            });
+            
+            console.log(base64);
+            console.log("uploadekita");
+        };
+        };
+        console.log(li);
+    });
+    // 模倣結果入力
+    const resultUl = document.getElementById('mimic-result-list');
+    resultUl.innerHTML = '';
+    opponentActions.forEach((act, idx) => {
+         const li = document.createElement('li');
+        li.textContent = act + '：';
+        ['〇','△','✕'].forEach(mark => {
+            const btn = document.createElement('button');
+            btn.textContent = mark;
+            btn.onclick = () => {
+                li.dataset.result = mark;
+                updateResultList();
+            };
+            li.appendChild(btn);
+        });
+        resultUl.appendChild(li);
     });
     resultUl.appendChild(li);
   });
@@ -161,25 +190,23 @@ function updateResultList() {
 }
 
 // 模倣結果送信（ダミー：相手待ち）
-document.getElementById("submit-mimic").onclick = () => {
-  document.getElementById("wait-mimic-msg").style.display = "";
-  // 通信で相手の模倣結果受信後（ダミー）
-  setTimeout(() => {
-    // 〇△✕の選択に応じて点数計算
-    const resultUl = document.getElementById("mimic-result-list");
-    let score = 0;
-    Array.from(resultUl.children).forEach((li) => {
-      if (li.dataset.result === "〇") score += 2;
-      else if (li.dataset.result === "△") score += 1;
-    });
-    // ダミー：相手の得点は5点固定
-    localStorage.setItem(
-      "score",
-      JSON.stringify({
-        self: `あなたの得点: ${score}点`,
-        opponent: `相手の得点: 5点`,
-      })
-    );
-    window.location.href = "result.html";
-  }, 1500);
+document.getElementById('submit-mimic').onclick = async() => {
+    
+    document.getElementById('wait-mimic-msg').style.display = '';
+    // 通信で相手の模倣結果受信後（ダミー）
+    setTimeout(() => {
+        // 〇△✕の選択に応じて点数計算
+        const resultUl = document.getElementById('mimic-result-list');
+        let score = 0;
+        Array.from(resultUl.children).forEach(li => {
+            if (li.dataset.result === '〇') score += 2;
+            else if (li.dataset.result === '△') score += 1;
+        });
+        // ダミー：相手の得点は5点固定
+        localStorage.setItem('score', JSON.stringify({
+            self: `あなたの得点: ${score}点`,
+            opponent: `相手の得点: 5点`
+        }));
+        window.location.href = 'result.html';
+    }, 1500);
 };
