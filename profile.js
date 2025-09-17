@@ -90,6 +90,7 @@ class ProfileManager {
       loadingSpinner: document.getElementById("loadingSpinner"),
       successMessage: document.getElementById("successMessage"),
       errorMessage: document.getElementById("errorMessage"),
+      backbtn: document.getElementById("backbtn"),
     };
 
     // 要素が見つからない場合のエラーチェック
@@ -133,6 +134,13 @@ class ProfileManager {
     if (this.elements.usernameInput) {
       this.elements.usernameInput.addEventListener("input", (e) =>
         this.handleUsernameChange(e)
+      );
+    }
+
+    if (this.elements.backbtn) {
+      this.elements.backbtn.addEventListener(
+        "click",
+        (e) => (window.location.href = "public/index.html")
       );
     }
   }
