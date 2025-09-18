@@ -3,7 +3,7 @@ import {getAuth,createUserWithEmailAndPassword,onAuthStateChanged,sendEmailVerif
 import {getFirestore,collection,getDocs,doc,addDoc} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore-lite.js";
 //firebaseのIDなどを宣言
 const firebaseConfig = {
-  apiKey: "AIzaSyAo6Teruh-6dPXACBAeJbH_lCmXzfTKt8M",
+  apiKey: "AIzaSyAo6Teruh-6dPXACBAeJbH_lCmXzfTKt8M",//
   authDomain: "itikuo-37042.firebaseapp.com",
   projectId: "itikuo-37042",
   storageBucket: "itikuo-37042.firebasestorage.app",

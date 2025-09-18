@@ -230,5 +230,5 @@ document.getElementById('submit-mimic').onclick = async() => {
             opponent: `相手の得点: 5点`
         }));
         window.location.href = 'result.html';
-    }, 50000);
+    }, 1500);
 };
