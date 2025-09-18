@@ -18,10 +18,13 @@
         const now = new Date().getTime();
         const restMillisecond = goal - now;
     if (restMillisecond <= 0){
+      //数値をゼロに固定する
         document.getElementById('hour').textContent = "00";
         document.getElementById('minute').textContent = "00";
         document.getElementById('second').textContent = "00";
         localStorage.removeItem("goalItem");
+        document.body.classList.add("end");
+        //エンドを追加
         
     return;
     }

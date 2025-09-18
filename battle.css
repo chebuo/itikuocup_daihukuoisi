@@ -443,3 +443,13 @@ button:disabled {
     border-color: #10b981;
   }
 }
+#end-message {
+  display: none;
+  font-size: 2em;
+  font-weight: bold;
+  color: red;
+  margin-top: 20px;
+}
+.end #end-message {
+  display: block;
+}
