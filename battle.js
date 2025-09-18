@@ -203,6 +203,7 @@ function renderOpponentActions(opponentActions) {
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/*';
+        fileInput.id='start-message';
         fileInput.onchange = async (e) => {
           const file = e.target.files[0];
           if (!file) return;
@@ -219,6 +220,7 @@ function renderOpponentActions(opponentActions) {
             });
             // 画像はonSnapshotで自動反映
             fileInput.style.display = 'none';
+            
           };
         };
         li.appendChild(fileInput);

@@ -450,6 +450,12 @@ button:disabled {
   color: red;
   margin-top: 20px;
 }
+#start-message{
+  display:block;
+}
 .end #end-message {
   display: block;
+}
+.end #start-message{
+  display:none;
 }
