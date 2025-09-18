@@ -37,7 +37,7 @@
 setInterval(showRestTime, 1000);
 showRestTime();
 
-document.getElementById("button").addEventListener("click", function () {
+document.getElementById("room-make").addEventListener("click", function () {
     localStorage.clear("goalItem");
     goal = new Date().getTime() + 3600000 * 24; // 新しく24時間設定
       localStorage.setItem("goalItem", goal);

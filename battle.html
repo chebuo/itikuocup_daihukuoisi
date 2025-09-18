@@ -27,9 +27,13 @@
     <button id="submit-actions" class="center-btn">リストを送信</button>
         <p id="wait-msg" style="display:none;">相手の入力を待っています...</p>
     </div>
-
     <!-- 相手のリスト受信＆点数化 -->
     <div class="section" id="mimic-phase" style="display:none;">
+         <p class="timer">残り
+   <span id="hour"></span>時間
+   <span id="minute"></span>分
+   <span id="second"></span>秒
+</p>
         <h2>相手のやったことリスト</h2>
         <ul id="opponent-action-list"></ul>
         <h3>模倣結果</h3>
@@ -44,7 +48,7 @@
         <div id="score"></div>
         <button onclick="window.location.reload()">もう一度対戦</button>
     </div>
-
     <script src="battle.js" type="module"></script>
+    <script src="time.js"></script>
 </body>
 </html>
