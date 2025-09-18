@@ -317,5 +317,30 @@ document.getElementById('submit-mimic').onclick = async() => {
       }
     });
   }
-  //window.location.href = 'result.html';
+
+  let myscore=null;
+  for(const uid of uids){
+  if(uid==!auth.currentUser.uid) {
+  const scoreDoc=doc(db,'rooms',roomId,'players',uid);
+  await setDoc(scoreDoc,{
+    score:score
+  });
+}else{
+    const myscoreDoc=doc(db,'rooms',roomId,'players',auth.currentUser.uid);
+    await setDoc(myscoreDoc,{
+        score:score
+    });
+    const mySnap=await getDoc(myscoreDoc);
+    if(mySnap.exists()){
+        myscore=mySnap.data().score;
+    }
+    console.log(myscore);
+    
+}
+}
+localStorage.setItem('score', JSON.stringify({
+    self: `あなたの得点: ${myscore}点`,
+    opponent: `相手の得点: ${score}点`
+  }));
+  window.location.href = 'result.html';
 };
