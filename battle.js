@@ -121,6 +121,40 @@ document.getElementById("room-form").addEventListener("submit", async (e) => {
   console.log(targetActions); //相手のデータを取得
   // 受信した相手のリストを画面に表示
   renderOpponentActions(targetActions);
+  // 相手が送った画像を受信・表示するリスト
+  const opponentImageList = document.getElementById('opponent-image-list');
+  opponentImageList.innerHTML = '';
+  // 相手UID取得
+  let opponentUid = null;
+  playersSnap.forEach((doc) => {
+    if (doc.id != auth.currentUser.uid) opponentUid = doc.id;
+  });
+  if (opponentUid) {
+    const imageCol = collection(db, 'rooms', roomId, 'players', opponentUid, 'images');
+    onSnapshot(imageCol, (snapshot) => {
+      opponentImageList.innerHTML = '';
+      if (snapshot.empty) {
+        const msg = document.createElement('li');
+        msg.textContent = '相手の画像はまだありません';
+        msg.style.color = 'gray';
+        opponentImageList.appendChild(msg);
+        return;
+      }
+      snapshot.docs.forEach(doc => {
+        const data = doc.data();
+        if (data.image && data.action) {
+          const li = document.createElement('li');
+          li.textContent = data.action;
+          const img = document.createElement('img');
+          img.src = data.image;
+          img.style.maxWidth = '120px';
+          img.style.display = 'block';
+          li.appendChild(img);
+          opponentImageList.appendChild(li);
+        }
+      });
+    });
+  }
   // mimic-phaseを表示、input-phaseを非表示
   document.getElementById("mimic-phase").style.display = "";
   document.getElementById("input-phase").style.display = "none";
@@ -129,50 +163,74 @@ document.getElementById("room-form").addEventListener("submit", async (e) => {
 // 行動送信（ダミー：相手待ち）
 document.getElementById("submit-actions").onclick = async () => {
   document.getElementById("wait-msg").style.display = "";
-  // 通信で相手の行動受信後       const roomId=document.getElementById('room-key-input').value.trim();
+  // 通信で相手の行動受信後
   const roomId = document.getElementById("room-key-input").value.trim();
 };
 
 // 模倣フェーズ
 function renderOpponentActions(opponentActions) {
-    const ul = document.getElementById('opponent-action-list');
-    ul.innerHTML = '';
-    opponentActions.forEach(act => {
-        const li = document.createElement('li');
-        li.textContent = act;
-        ul.appendChild(li);
-        const fileInput=li.appendChild(document.createElement('input'));
-        fileInput.type='file';
-        fileInput.accept='image/*';
-        fileInput.onchange=async(e)=>{
-            const file=e.target.files[0];
-            if(!file) return;
-            const reader=new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload=async()=>{
-                const base64=reader.result;
-            const imageRef=doc(db,'rooms',roomId,'players',auth.currentUser.uid,'images');
-            await setDoc(imageRef,{
-                image:base64,
-                action:act,
-                timestamp:new Date()
-            }).then(()=>{
-                console.log(imageRef.path);
-            }).catch((error)=>{
-                console.log(error);
-            });
-            
-            console.log(base64);
-            console.log("uploadekita");
-        };
-    };
-        console.log(li);
+  const ul = document.getElementById('opponent-action-list');
+  ul.innerHTML = '';
+  // Firestoreのimagesコレクションをリアルタイム監視
+  const imageCol = collection(db, 'rooms', roomId, 'players', auth.currentUser.uid, 'images');
+  onSnapshot(imageCol, (snapshot) => {
+    const imagesMap = {};
+    snapshot.docs.forEach(doc => {
+      const data = doc.data();
+      if (data.action && data.image) imagesMap[data.action] = data.image;
     });
+    ul.innerHTML = '';
+    if (!opponentActions || opponentActions.length === 0) {
+      // リストが空の場合はメッセージ表示
+      const msg = document.createElement('li');
+      msg.textContent = '相手がまだ送信していません';
+      msg.style.color = 'gray';
+      ul.appendChild(msg);
+      return;
+    }
+    opponentActions.forEach(act => {
+      const li = document.createElement('li');
+      li.textContent = act;
+      // 証拠画像があれば表示
+      if (imagesMap[act]) {
+        const img = document.createElement('img');
+        img.src = imagesMap[act];
+        img.style.maxWidth = '120px';
+        img.style.display = 'block';
+        li.appendChild(img);
+      } else {
+        // 画像未登録の場合はファイル選択欄
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.onchange = async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = async () => {
+            const base64 = reader.result;
+            // Firestoreにアップロード（相手が取得できる）
+            const imageRef = doc(db, 'rooms', roomId, 'players', auth.currentUser.uid, 'images', act);
+            await setDoc(imageRef, {
+              image: base64,
+              action: act,
+              timestamp: new Date()
+            });
+            // 画像はonSnapshotで自動反映
+            fileInput.style.display = 'none';
+          };
+        };
+        li.appendChild(fileInput);
+      }
+      ul.appendChild(li);
+    });
+  });
     // 模倣結果入力
     const resultUl = document.getElementById('mimic-result-list');
     resultUl.innerHTML = '';
     opponentActions.forEach((act, idx) => {
-         const li = document.createElement('li');
+        const li = document.createElement('li');
         li.textContent = act + '：';
         ['〇','△','✕'].forEach(mark => {
             const btn = document.createElement('button');
@@ -200,35 +258,88 @@ function updateResultList() {
 
 // 模倣結果送信（ダミー：相手待ち）
 document.getElementById('submit-mimic').onclick = async() => {
-    
-    document.getElementById('wait-mimic-msg').style.display = '';
-    // 通信で相手の模倣結果受信後（ダミー）
-    const roomId = document.getElementById("room-key-input").value.trim();
-    const targetDoc=collection(db,'rooms',roomId,'players');
-    const targetSnap=await getDocs(targetDoc);
-    const uids=targetSnap.docs.map(doc=>doc.id);
-    //console.log(uids);
-    for(const uid of uids){
-        if(uid===auth.currentUser.uid) continue;
-        const imageCol=collection(db,'rooms',roomId,'players',uid,'images');
-        const imageSnap=await getDocs(imageCol);
-        const images=imageSnap.docs.map(doc=>doc.data());
-        console.log(images);//証拠のデータ配列
-        console.log('images:',imageSnap.docs.map(d=>d.id));
+  // デバッグ: 取得対象UID, roomId, append先ID, display状態
+  const roomId = document.getElementById("room-key-input").value.trim();
+  const targetDoc = collection(db, 'rooms', roomId, 'players');
+  const targetSnap = await getDocs(targetDoc);
+  const uids = targetSnap.docs.map(doc => doc.id);
+  console.log('submit-mimic: roomId', roomId);
+  console.log('submit-mimic: 自分のUID', auth.currentUser.uid);
+  console.log('submit-mimic: 取得対象UID一覧', uids);
+  const resultImageList = document.getElementById('result-opponent-image-list');
+  console.log('result-opponent-image-list要素:', resultImageList);
+  console.log('result-opponent-image-list display:', resultImageList && resultImageList.style.display);
+  let opponentImages = [];
+  for (const uid of uids) {
+    if (uid === auth.currentUser.uid) continue;
+    console.log('画像取得対象UID:', uid);
+    const imageCol = collection(db, 'rooms', roomId, 'players', uid, 'images');
+    console.log('画像取得パス:', imageCol.path);
+    const imageSnap = await getDocs(imageCol);
+    console.log('imageSnap.docs:', imageSnap.docs);
+    opponentImages = imageSnap.docs.map(doc => doc.data());
+    console.log('opponentImages after getDocs:', opponentImages);
+  }
+  // 画像表示直前
+  console.log('opponentImages before render:', opponentImages);
+  // 〇△✕の選択に応じて点数計算
+  const resultUl = document.getElementById('mimic-result-list');
+  let score = 0;
+  Array.from(resultUl.children).forEach(li => {
+    if (li.dataset.result === '〇') score += 2;
+    else if (li.dataset.result === '△') score += 1;
+  });
+  localStorage.setItem('score', JSON.stringify({
+    self: `あなたの得点: ${score}点`,
+    opponent: `相手の得点: 5点`
+  }));
+  resultImageList.innerHTML = '';
+  if (opponentImages.length === 0) {
+    console.log('opponentImagesは空です');
+    const msg = document.createElement('li');
+    msg.textContent = '相手の証拠画像はありません';
+    msg.style.color = 'gray';
+    resultImageList.appendChild(msg);
+  } else {
+    opponentImages.forEach(imgObj => {
+      console.log('imgObj:', imgObj);
+      if (imgObj.image && imgObj.action) {
+        console.log('imgObj.image:', imgObj.image);
+        console.log('imgObj.action:', imgObj.action);
+        const li = document.createElement('li');
+        li.textContent = imgObj.action;
+        const img = document.createElement('img');
+        img.src = imgObj.image;
+        img.style.maxWidth = '120px';
+        img.style.display = 'block';
+        li.appendChild(img);
+        resultImageList.appendChild(li);
+      }
+    });
+  }
+
+  let myscore=null;
+  for(const uid of uids){
+  if(uid==!auth.currentUser.uid) {
+  const scoreDoc=doc(db,'rooms',roomId,'players',uid);
+  await setDoc(scoreDoc,{
+    score:score
+  });
+}else{
+    const myscoreDoc=doc(db,'rooms',roomId,'players',auth.currentUser.uid);
+    await setDoc(myscoreDoc,{
+        score:score
+    });
+    const mySnap=await getDoc(myscoreDoc);
+    if(mySnap.exists()){
+        myscore=mySnap.data().score;
     }
-    setTimeout(() => {
-        // 〇△✕の選択に応じて点数計算
-        const resultUl = document.getElementById('mimic-result-list');
-        let score = 0;
-        Array.from(resultUl.children).forEach(li => {
-            if (li.dataset.result === '〇') score += 2;
-            else if (li.dataset.result === '△') score += 1;
-        });
-        // ダミー：相手の得点は5点固定
-        localStorage.setItem('score', JSON.stringify({
-            self: `あなたの得点: ${score}点`,
-            opponent: `相手の得点: 5点`
-        }));
-        window.location.href = 'result.html';
-    }, 1500);
+    console.log(myscore);
+}
+}
+localStorage.setItem('score', JSON.stringify({
+    self: `あなたの得点: ${myscore}点`,
+    opponent: `相手の得点: ${score}点`
+  }));
+  window.location.href = 'result.html';
 };
