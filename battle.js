@@ -335,7 +335,6 @@ document.getElementById('submit-mimic').onclick = async() => {
         myscore=mySnap.data().score;
     }
     console.log(myscore);
-    
 }
 }
 localStorage.setItem('score', JSON.stringify({

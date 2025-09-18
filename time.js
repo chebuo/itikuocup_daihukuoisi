@@ -18,10 +18,13 @@
         const now = new Date().getTime();
         const restMillisecond = goal - now;
     if (restMillisecond <= 0){
+      //数値をゼロに固定する
         document.getElementById('hour').textContent = "00";
         document.getElementById('minute').textContent = "00";
         document.getElementById('second').textContent = "00";
         localStorage.removeItem("goalItem");
+        document.body.classList.add("end");
+        //エンドを追加
         
     return;
     }
@@ -37,7 +40,7 @@
 setInterval(showRestTime, 1000);
 showRestTime();
 
-document.getElementById("button").addEventListener("click", function () {
+document.getElementById("room-make").addEventListener("click", function () {
     localStorage.clear("goalItem");
     goal = new Date().getTime() + 3600000 * 24; // 新しく24時間設定
       localStorage.setItem("goalItem", goal);

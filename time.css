@@ -4,15 +4,15 @@ body{
     align-items: center;
     height: 100vh;
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    background-color: #3fbdcb;
 }
 
 .timer{
  text-align: center;
  font-size: 2em;
  padding: 20px;
- border: 2px solid #ccc;
+ border: 2px solid #3fbdc8;
  border-radius: 10px;
- background-color: #ffff;
+ background-color: rgb(113, 201, 255);
  box-shadow: 0 4px 8px rgba(0,0,0,0.1);   
 }

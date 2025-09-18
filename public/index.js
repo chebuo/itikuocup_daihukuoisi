@@ -55,7 +55,7 @@ onAuthStateChanged(auth, (user) => {
 
     profileBtn.onclick = () => {
       // Navigate to login page
-      window.location.href = "public/auth.html";
+      window.location.href = "auth.html";
     };
   }
 });
